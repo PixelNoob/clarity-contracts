@@ -5,6 +5,7 @@
 (define-data-var token-name (string-ascii 32) "simple-token")
 (define-data-var token-symbol (string-ascii 32) "SMPL")
 (define-data-var token-decimals uint u2)
+(define-data-var uri (string-utf8 256) u"http://some.json")
 
 ;; Meta Read Only Functions for reading details about the contract - conforms to SIP 10
 ;; --------------------------------------------------------------------------
@@ -34,6 +35,10 @@
 (define-read-only (get-total-supply)
   (ok (ft-get-supply simple-token)))
 
+;; Public getter for the URI
+(define-read-only (get-token-uri)
+  (ok (some (var-get uri))))
+
 ;; Write function to transfer tokens between accounts - conforms to SIP 10
 ;; --------------------------------------------------------------------------
 
@@ -45,23 +50,6 @@
   (begin
       (asserts! (is-eq tx-sender sender) (err u4)) ;; Ensure the originator is the sender principal
       (ft-transfer? simple-token amount sender recipient) ) ) ;; Transfer
-
-;; Token URI
-;; --------------------------------------------------------------------------
-
-;; Variable for URI storage
-(define-data-var uri (string-utf8 256) u"")
-
-;; Public getter for the URI
-(define-read-only (get-token-uri)
-  (ok (some (var-get uri))))
-
-;; Setter for the URI - only the owner can set it
-(define-public (set-token-uri (updated-uri (string-utf8 256)))
-  (begin
-    ;; Print the action for any off chain watchers
-    (print { action: "set-token-uri", updated-uri: updated-uri })
-    (ok (var-set uri updated-uri))))
 
 ;; Minting and Burning
 ;; --------------------------------------------------------------------------
