@@ -65,3 +65,13 @@
         ;; Print the action for any off chain watchers
         (print { action: "burn-tokens", burn-amount: burn-amount, burn-from : burn-from  })
         (ft-burn? simple-token burn-amount burn-from)))
+
+;; Token URI
+;; --------------------------------------------------------------------------
+;; Setter for the URI - only the uri-changer can modify it
+        (define-public (set-token-uri (updated-uri (string-utf8 256)))
+          (begin
+            (asserts! (is-eq tx-sender 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM) (err u4)) ;; set the allowed urichanger here
+            ;; Print the action for any off chain watchers
+            (print { action: "set-token-uri", updated-uri: updated-uri })
+            (ok (var-set uri updated-uri))))
