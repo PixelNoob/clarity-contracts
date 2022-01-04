@@ -1,6 +1,8 @@
 ;; simple-token
 ;; Very simple contract with no restrictions.
 
+(define-constant contract-owner tx-sender)
+
 ;; Data variables specific to the deployed token contract
 (define-data-var token-name (string-ascii 32) "simple-token")
 (define-data-var token-symbol (string-ascii 32) "SMPL")
@@ -55,7 +57,7 @@
 ;; --------------------------------------------------------------------------
 
 ;; Mint tokens to address and initialize the contract
-(ft-mint? simple-token u100000000 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
+(ft-mint? simple-token u100000000 contract-owner)
 
 
 ;; Burn tokens from the target address
@@ -71,7 +73,7 @@
 ;; Setter for the URI - only the uri-changer can modify it
         (define-public (set-token-uri (updated-uri (string-utf8 256)))
           (begin
-            (asserts! (is-eq tx-sender 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM) (err u4)) ;; set the allowed urichanger here
+            (asserts! (is-eq tx-sender contract-owner) (err u4)) ;; set the allowed urichanger here
             ;; Print the action for any off chain watchers
             (print { action: "set-token-uri", updated-uri: updated-uri })
             (ok (var-set uri updated-uri))))
