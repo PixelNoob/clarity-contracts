@@ -12,4 +12,4 @@ A collection of Clarity Smart Contracts for the Stacks Blockchain.
 
 ### Step 3
 
-Open the contracts dir and create the .clar file
+Open the contracts dir and create the hello-world.clar file and write your code
